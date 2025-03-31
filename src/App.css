@@ -18,6 +18,11 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    max-height: 35px;
+}
+
+input[type=number] {
+    appearance: textfield;
 }
 
 
@@ -31,6 +36,7 @@ aside {
     color: white;
     width: 200px;
     padding: 16px;
+    height: 100%;
 }
 
 aside ul {
@@ -42,6 +48,7 @@ aside ul li {
     margin: 16px 0;
 }
 
+
 aside ul li a {
     display: block;
     padding: 8px;
@@ -49,14 +56,21 @@ aside ul li a {
     text-decoration: none;
 }
 
+
+
+
 aside ul li a:hover {
     background-color: #374151;
 }
 
 main {
     flex: 1;
-    padding: 24px;
+    padding: 16px;
+    background-color: ghostwhite;
+
 }
+
+
 
 .content {
     display: none;
@@ -64,6 +78,11 @@ main {
 
 .active {
     display: block;
+    height: 100%
+}
+
+.active-link {
+    background-color: #374151;
 }
 
 footer {
