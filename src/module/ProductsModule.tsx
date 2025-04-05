@@ -5,6 +5,7 @@ import { Sheet, Table, Modal, ModalDialog, DialogTitle, FormControl, Input, Form
 import Checkbox from "@mui/joy/Checkbox";
 import Button from '@mui/joy/Button';
 import CreateProductModal from "../components/CreateProductModal";
+import apiAgent from "../api/apiAgent";
 
 interface Product {
     id: string;
@@ -43,13 +44,16 @@ export default function ProductsModule() {
     useEffect(() => {
 
         if (productList.length === 0) {
-            fetch('http://localhost:5227/api/products')
-                .then(response => response.json())
-                .then(data => setProductList(data))
-                .catch(err => console.log(err.message))
+
+            try {
+                apiAgent.Products.getAllProducts().then((data) => setProductList(data));
+
+            } catch (error: any) {
+                console.log(error.message)
+            }
         }
 
-    }, [selectedProducts.length, setSelectedProducts])
+    }, [productList, setProductList, selectedProducts.length, setSelectedProducts])
 
     const handleCheckboxClick = (productId: number) => {
         console.log(selectedProducts.length)
@@ -89,12 +93,19 @@ export default function ProductsModule() {
         }
 
         if (confirmDelete) {
-            productIds.forEach((id) => {
-                fetch(`http://localhost:5227/api/products/${id}`, { method: "DELETE" })
-                    .then(reponse => console.log(reponse))
-                    .catch(err => console.log(err))
+            productIds.forEach(async (id) => {
+                await apiAgent.Products.deleteProduct(id)
+
             })
+
+            window.location.reload()
+
         }
+    }
+
+    const onModalClose = (close: boolean) => {
+        setModalOpen(close)
+        window.location.reload()
     }
 
     return (
@@ -111,7 +122,7 @@ export default function ProductsModule() {
                 </div>
             </div>
 
-            <CreateProductModal modalOpen={modalOpen} closeModalFn={setModalOpen} calledFrom={modalCalledFrom} productToEdit={productToEdit} />
+            <CreateProductModal modalOpen={modalOpen} closeModalFn={onModalClose} calledFrom={modalCalledFrom} productToEdit={productToEdit} />
 
             <Table variant="outlined" stripe='odd' hoverRow aria-label="Product List" size='md' >
                 <thead>

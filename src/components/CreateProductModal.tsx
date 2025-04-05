@@ -1,5 +1,6 @@
 import { Button, DialogTitle, FormControl, FormLabel, Input, Modal, ModalDialog, Select, Stack, Option } from "@mui/joy";
 import React, { useState } from "react";
+import apiAgent from "../api/apiAgent";
 
 interface CreateProductModalProps {
     modalOpen: boolean;
@@ -34,29 +35,25 @@ export default function CreateProductModal({ modalOpen, closeModalFn, calledFrom
         event.preventDefault()
         const formData = new FormData(event.currentTarget)
 
+
+
         switch (calledFrom) {
             case "edit-button":
                 formData.append("id", productToEdit!.id)
-                fetch('http://localhost:5227/api/products', { method: 'PUT', body: formData })
-                    .then(response => response.json())
-                    .then(data => console.log(data))
-                    .catch(err => err.message)
+
+                await apiAgent.Products.updateProduct(formData)
                 break
 
             case "add-button":
-                fetch('http://localhost:5227/api/products', { method: 'POST', body: formData })
-                    .then(response => response.json())
-                    .then(data => console.log(data))
-                    .catch(err => err.message)
+
+                await apiAgent.Products.createProduct(formData)
                 break
 
             default:
                 alert("I don't know if you are trying to add or delete")
         }
 
-
         closeModalFn(!modalOpen)
-
     }
 
 
